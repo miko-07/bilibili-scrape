@@ -1,0 +1,253 @@
+---
+title: "bilibili"
+author: "Michael Zhu"
+date: '2022-04-18'
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(rvest)
+library(dplyr)
+library(stringr)
+library(magrittr)
+library(ggplot2)
+```
+
+# scrape data from different section of bilibili top list
+
+```{r}
+# all
+link = "https://www.bilibili.com/v/popular/rank/all"
+page = read_html(link,encoding = 'utf-8')
+video_name = page %>% html_nodes(".title") %>% html_text()
+up_name = page %>% html_nodes(".up-name") %>% html_text()
+# modify data with count 10000
+watch_ct_temp = page %>% html_nodes(".detail-state .data-box:nth-child(1)") %>% html_text()
+watch_ct = rep(NULL, length(watch_ct_temp))
+for (i in 1:length(watch_ct_temp)){
+  if (str_detect(watch_ct_temp[i], "万") == TRUE){
+    watch_ct[i] = as.numeric(str_extract(watch_ct_temp[i],'\\d+(\\.)*(\\d)*')) * 10000
+  }
+  else{
+    watch_ct[i] = as.numeric(str_extract(watch_ct_temp[i],'\\d+(\\.)*(\\d)*'))
+  }
+}
+
+# modify data with count 10000
+chat_ct_temp = page %>% html_nodes(".data-box+ .data-box") %>% html_text()
+chat_ct = rep(NULL, length(chat_ct_temp))
+for (i in 1:length(chat_ct_temp)){
+  if (str_detect(chat_ct_temp[i], "万") == TRUE){
+    chat_ct[i] = as.numeric(str_extract(chat_ct_temp[i],'\\d+(\\.)*(\\d)*')) * 10000
+  }
+  else{
+    chat_ct[i] = as.numeric(str_extract(chat_ct_temp[i],'\\d+(\\.)*(\\d)*'))
+  }
+}
+chat_per1kview = round(chat_ct*1000/watch_ct, 2)
+data_all = data.frame(video_name, up_name, watch_ct, chat_ct, chat_per1kview)
+write.csv(data_all, "data_all.csv")
+```
+
+```{r}
+# game
+link = "https://www.bilibili.com/v/popular/rank/game"
+page = read_html(link,encoding = 'utf-8')
+video_name = page %>% html_nodes(".title") %>% html_text()
+up_name = page %>% html_nodes(".up-name") %>% html_text()
+
+watch_ct_temp = page %>% html_nodes(".detail-state .data-box:nth-child(1)") %>% html_text()
+
+for (i in 1:length(watch_ct_temp)){
+  if (str_detect(watch_ct_temp[i], "万") == TRUE){
+    watch_ct[i] = as.numeric(str_extract(watch_ct_temp[i],'\\d+(\\.)*(\\d)*')) * 10000
+  }
+  else{
+    watch_ct[i] = as.numeric(str_extract(watch_ct_temp[i],'\\d+(\\.)*(\\d)*'))
+  }
+}
+
+
+chat_ct_temp = page %>% html_nodes(".data-box+ .data-box") %>% html_text()
+for (i in 1:length(chat_ct_temp)){
+  if (str_detect(chat_ct_temp[i], "万") == TRUE){
+    chat_ct[i] = as.numeric(str_extract(chat_ct_temp[i],'\\d+(\\.)*(\\d)*')) * 10000
+  }
+  else{
+    chat_ct[i] = as.numeric(str_extract(chat_ct_temp[i],'\\d+(\\.)*(\\d)*'))
+  }
+}
+chat_per1kview = round(chat_ct*1000/watch_ct, 2)
+data_game = data.frame(video_name, up_name, watch_ct, chat_ct, chat_per1kview)
+write.csv(data_game, "data_game.csv")
+```
+
+```{r}
+# knowledge
+link = "https://www.bilibili.com/v/popular/rank/knowledge"
+page = read_html(link,encoding = 'utf-8')
+video_name = page %>% html_nodes(".title") %>% html_text()
+up_name = page %>% html_nodes(".up-name") %>% html_text()
+
+watch_ct_temp = page %>% html_nodes(".detail-state .data-box:nth-child(1)") %>% html_text()
+
+for (i in 1:length(watch_ct_temp)){
+  if (str_detect(watch_ct_temp[i], "万") == TRUE){
+    watch_ct[i] = as.numeric(str_extract(watch_ct_temp[i],'\\d+(\\.)*(\\d)*')) * 10000
+  }
+  else{
+    watch_ct[i] = as.numeric(str_extract(watch_ct_temp[i],'\\d+(\\.)*(\\d)*'))
+  }
+}
+
+
+chat_ct_temp = page %>% html_nodes(".data-box+ .data-box") %>% html_text()
+for (i in 1:length(chat_ct_temp)){
+  if (str_detect(chat_ct_temp[i], "万") == TRUE){
+    chat_ct[i] = as.numeric(str_extract(chat_ct_temp[i],'\\d+(\\.)*(\\d)*')) * 10000
+  }
+  else{
+    chat_ct[i] = as.numeric(str_extract(chat_ct_temp[i],'\\d+(\\.)*(\\d)*'))
+  }
+}
+chat_per1kview = round(chat_ct*1000/watch_ct, 2)
+data_knowledge = data.frame(video_name, up_name, watch_ct, chat_ct, chat_per1kview)
+write.csv(data_knowledge, "data_knowledge.csv")
+```
+
+```{r}
+# tech
+link = "https://www.bilibili.com/v/popular/rank/tech"
+page = read_html(link,encoding = 'utf-8')
+video_name = page %>% html_nodes(".title") %>% html_text()
+up_name = page %>% html_nodes(".up-name") %>% html_text()
+
+watch_ct_temp = page %>% html_nodes(".detail-state .data-box:nth-child(1)") %>% html_text()
+
+for (i in 1:length(watch_ct_temp)){
+  if (str_detect(watch_ct_temp[i], "万") == TRUE){
+    watch_ct[i] = as.numeric(str_extract(watch_ct_temp[i],'\\d+(\\.)*(\\d)*')) * 10000
+  }
+  else{
+    watch_ct[i] = as.numeric(str_extract(watch_ct_temp[i],'\\d+(\\.)*(\\d)*'))
+  }
+}
+
+
+chat_ct_temp = page %>% html_nodes(".data-box+ .data-box") %>% html_text()
+for (i in 1:length(chat_ct_temp)){
+  if (str_detect(chat_ct_temp[i], "万") == TRUE){
+    chat_ct[i] = as.numeric(str_extract(chat_ct_temp[i],'\\d+(\\.)*(\\d)*')) * 10000
+  }
+  else{
+    chat_ct[i] = as.numeric(str_extract(chat_ct_temp[i],'\\d+(\\.)*(\\d)*'))
+  }
+}
+chat_per1kview = round(chat_ct*1000/watch_ct, 2)
+data_tech = data.frame(video_name, up_name, watch_ct, chat_ct, chat_per1kview)
+write.csv(data_tech, "data_tech.csv")
+```
+
+```{r}
+# car
+link = "https://www.bilibili.com/v/popular/rank/car"
+page = read_html(link,encoding = 'utf-8')
+video_name = page %>% html_nodes(".title") %>% html_text()
+up_name = page %>% html_nodes(".up-name") %>% html_text()
+
+watch_ct_temp = page %>% html_nodes(".detail-state .data-box:nth-child(1)") %>% html_text()
+
+for (i in 1:length(watch_ct_temp)){
+  if (str_detect(watch_ct_temp[i], "万") == TRUE){
+    watch_ct[i] = as.numeric(str_extract(watch_ct_temp[i],'\\d+(\\.)*(\\d)*')) * 10000
+  }
+  else{
+    watch_ct[i] = as.numeric(str_extract(watch_ct_temp[i],'\\d+(\\.)*(\\d)*'))
+  }
+}
+
+
+chat_ct_temp = page %>% html_nodes(".data-box+ .data-box") %>% html_text()
+for (i in 1:length(chat_ct_temp)){
+  if (str_detect(chat_ct_temp[i], "万") == TRUE){
+    chat_ct[i] = as.numeric(str_extract(chat_ct_temp[i],'\\d+(\\.)*(\\d)*')) * 10000
+  }
+  else{
+    chat_ct[i] = as.numeric(str_extract(chat_ct_temp[i],'\\d+(\\.)*(\\d)*'))
+  }
+}
+chat_per1kview = round(chat_ct*1000/watch_ct, 2)
+data_car = data.frame(video_name, up_name, watch_ct, chat_ct, chat_per1kview)
+write.csv(data_all, "data_car.csv")
+```
+
+# simple data visualization
+
+## density plot
+```{r}
+# plot overall
+x = data_all$watch_ct
+h = hist(x, breaks = 20, col = "red", main = "overall", ylim = c(0,50))
+xfit<-seq(min(x),max(x),length=50) 
+yfit<-dnorm(xfit,mean=mean(x),sd=sd(x))
+yfit <- yfit*diff(h$mids[1:2])*length(x)
+lines(xfit, yfit, col="blue", lwd=2)
+
+# plot game
+x = data_game$watch_ct
+h = hist(x, breaks = 20, col = "green", main = "game", ylim = c(0,50))
+xfit<-seq(min(x),max(x),length=50) 
+yfit<-dnorm(xfit,mean=mean(x),sd=sd(x))
+yfit <- yfit*diff(h$mids[1:2])*length(x)
+lines(xfit, yfit, col="blue", lwd=2)
+
+# plot knowledge
+x = data_knowledge$watch_ct
+h = hist(x, breaks = 20, col = "pink", main = "knowledge", ylim = c(0,50))
+xfit<-seq(min(x),max(x),length=50) 
+yfit<-dnorm(xfit,mean=mean(x),sd=sd(x))
+yfit <- yfit*diff(h$mids[1:2])*length(x)
+lines(xfit, yfit, col="blue", lwd=2)
+
+# plot tech
+x = data_tech$watch_ct
+h = hist(x, breaks = 20, col = "yellow", main = "tech", ylim = c(0,50))
+xfit<-seq(min(x),max(x),length=50) 
+yfit<-dnorm(xfit,mean=mean(x),sd=sd(x))
+yfit <- yfit*diff(h$mids[1:2])*length(x)
+lines(xfit, yfit, col="blue", lwd=2)
+
+# plot car
+x = data_tech$watch_ct
+h = hist(x, breaks = 20, col = "purple", main = "car", ylim = c(0,50))
+xfit<-seq(min(x),max(x),length=50) 
+yfit<-dnorm(xfit,mean=mean(x),sd=sd(x))
+yfit <- yfit*diff(h$mids[1:2])*length(x)
+lines(xfit, yfit, col="blue", lwd=2)
+```
+
+## pie chart of view count
+
+```{r}
+data_watch <- data.frame(
+  group=c("game", "knowledge", "tech", "car"),
+  value=c(sum(data_game$watch_ct), sum(data_knowledge$watch_ct), sum(data_tech$watch_ct), sum(data_car$watch_ct))
+)
+
+data_watch = data_watch %>% arrange(desc(group)) %>%
+  mutate(prop = value/sum(data_watch$value) * 100) %>%
+  mutate (ypos = cumsum(prop) - 0.5*prop)
+
+
+ggplot(data_watch, aes(x = "", y = prop, fill = group)) +
+  geom_bar(stat = "identity", width = 1, color = "white") +
+  coord_polar("y", start = 0) +
+  theme_void() + 
+  theme(legend.position = "none") + 
+  geom_text(aes(y = ypos, label = group), color = "white", size = 6) +
+  scale_fill_brewer(palette = "Set1")
+
+```
